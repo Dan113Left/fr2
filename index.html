@@ -6,49 +6,50 @@
     <title>Fromm AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FFFFFF; /* White background */
-            color: #333333; /* Dark Gray text */
-            overscroll-behavior-y: none; /* Prevent pull-to-refresh */
+            background-color: #FAF0E6; /* Cream background for the whole page */
+            color: #333333;
+            overscroll-behavior-y: none;
         }
         .tab-button {
             transition: background-color 0.3s, color 0.3s;
-            padding: 12px 3px; /* Increased button padding for better touch targets */
-            min-height: 48px; /* Minimum touch target size */
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         .tab-button.active {
-            background-color: #42B2FC; /* New bright blue */
+            background-color: #42B2FC; /* New Accent Color */
             color: white;
         }
         .tab-button:not(.active):hover {
-            background-color: #E8F4FE; /* Lighter version of new blue */
+            background-color: #E0F2F7;
         }
+        /* Card style for My Account section specifically */
+        #myAccount .card {
+            background-color: #FFFFFF; /* White background for My Account card */
+        }
+        /* General card style for other sections */
         .card {
-            background-color: white;
+            background-color: white; /* Default white for other cards */
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             padding: 20px;
             margin-bottom: 20px;
         }
         .btn-primary {
-            background-color: #42B2FC; /* New bright blue */
+            background-color: #42B2FC; /* New Accent Color */
             color: white;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border-radius: 8px;
-            font-weight: 500;
+            font-weight: 600;
             transition: background-color 0.3s;
+            font-size: 1rem;
         }
         .btn-primary:hover {
-            background-color: #3B9FE2; /* Darker shade of new blue */
+            background-color: #2F9AE8; /* Darker shade of new accent */
         }
         .btn-secondary {
-            background-color: #E0E0E0; /* Light Gray */
+            background-color: #E0E0E0;
             color: #333333;
             padding: 10px 15px;
             border-radius: 8px;
@@ -61,12 +62,33 @@
         .concern-tag {
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            border: 1px solid #D1D5DB;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin: 4px;
+            display: inline-block;
         }
         .concern-tag.selected {
-            background-color: #42B2FC; /* New bright blue */
+            background-color: #42B2FC; /* New Accent Color */
             color: white;
-            border-color: #42B2FC;
+            border-color: #42B2FC; /* New Accent Color */
         }
+        .concern-tag:not(.selected):hover {
+            border-color: #42B2FC; /* New Accent Color for hover border */
+            background-color: #f0f7ff; /* Lighter shade for hover background */
+        }
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.2em 1.2em;
+            padding-right: 2.5rem; /* Make space for arrow */
+        }
+
         /* Custom scrollbar for webkit browsers */
         ::-webkit-scrollbar {
             width: 6px;
@@ -76,22 +98,14 @@
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #42B2FC; /* New bright blue */
+            background: #A0D2DB; /* Keeping scrollbar subtle */
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #3B9FE2; /* Darker shade of new blue */
+            background: #87CEEB;
         }
-        /* Ensure content doesn't hide behind fixed footer */
         main {
-            padding-bottom: 100px; /* Increased padding to accommodate higher buttons */
-        }
-        /* Footer styles for better mobile accessibility */
-        footer {
-            padding-bottom: env(safe-area-inset-bottom, 15px); /* Add safe area for modern phones */
-        }
-        footer nav {
-            padding: 8px 1px; /* Increased vertical padding */
+            padding-bottom: 80px;
         }
     </style>
 </head>
@@ -99,9 +113,9 @@
     <div id="app" class="min-h-screen flex flex-col">
         <header class="p-4 shadow-md bg-white sticky top-0 z-10">
             <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-xl font-bold text-[#87CEEB]" id="appName">Fromm AI</h1>
+                <h1 class="text-xl font-bold text-[#42B2FC]" id="appName">Fromm AI</h1>
                 <div class="flex items-center space-x-2">
-                    <select id="languageSwitcher" class="p-2 border border-gray-300 rounded-md text-sm">
+                    <select id="languageSwitcher" class="p-2 border border-gray-300 rounded-md text-sm focus:ring-[#42B2FC] focus:border-[#42B2FC]">
                         <option value="en">English</option>
                         <option value="ru">Русский</option>
                         <option value="fr">Français</option>
@@ -113,15 +127,49 @@
 
         <main class="flex-grow container mx-auto p-4 overflow-y-auto">
             <section id="myAccount" class="hidden">
-                <div class="card">
-                    <h2 class="text-2xl font-semibold mb-4" data-translate="myAccountTitle">What's on your mind?</h2>
-                    <p class="text-gray-600 mb-6" data-translate="myAccountDescription">Select the topics that concern you. This will help us personalize your AI mentor.</p>
-                    <div id="concernsList" class="space-y-3 mb-6">
+                <div class="card"> <h2 class="text-xl font-semibold mb-6" data-translate="myAccountTitle">My Account</h2>
+
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4" data-translate="topicsToDiscussTitle">The topics I want to discuss</h3>
+
+                        <div class="mb-6">
+                            <h4 class="text-md font-semibold text-gray-700 mb-3" data-translate="subCategoryStateOfMind">My state of mind</h4>
+                            <div id="concernsStateOfMind" class="flex flex-wrap -m-1">
+                                </div>
                         </div>
-                    <button id="saveConcerns" class="btn-primary w-full" data-translate="saveButton">Save Concerns</button>
+
+                        <div class="mb-6">
+                            <h4 class="text-md font-semibold text-gray-700 mb-3" data-translate="subCategoryRelationship">Relationship</h4>
+                            <div id="concernsRelationship" class="flex flex-wrap -m-1">
+                                </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h4 class="text-md font-semibold text-gray-700 mb-3" data-translate="subCategoryWorkStudy">Work, study</h4>
+                            <div id="concernsWorkStudy" class="flex flex-wrap -m-1">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4" data-translate="whereFromTitle">Where are you from?</h3>
+                        <div class="relative">
+                             <select id="userRegionSelect" class="w-full p-3 border border-gray-300 rounded-md focus:ring-[#42B2FC] focus:border-[#42B2FC] bg-white">
+                                <option value="" data-translate="chooseRegionPlaceholder">Choose a region</option>
+                                <option value="latin_america" data-translate="regionLatinAmerica">Latin America</option>
+                                <option value="north_america" data-translate="regionNorthAmerica">North America</option>
+                                <option value="europe" data-translate="regionEurope">Europe</option>
+                                <option value="scandinavia" data-translate="regionScandinavia">Scandinavia</option>
+                                <option value="middle_east" data-translate="regionMiddleEast">Middle East</option>
+                                <option value="india" data-translate="regionIndia">India</option>
+                             </select>
+                        </div>
+                    </div>
+
+                    <button id="saveConcerns" class="btn-primary w-full" data-translate="saveButton">Save</button>
                 </div>
-                 <div class="card mt-6">
-                    <h3 class="text-lg font-semibold mb-2" data-translate="disclaimerTitle">Important Disclaimer</h3>
+
+                 <div class="card mt-6"> <h3 class="text-lg font-semibold mb-2" data-translate="disclaimerTitle">Important Disclaimer</h3>
                     <p class="text-sm text-gray-600" data-translate="disclaimerText">
                         Fromm AI is a digital assistant based on artificial intelligence. AI psychologists are not real people or medical professionals. This application is not intended for diagnosing or treating mental disorders. In case of serious problems or an emergency, please contact a qualified specialist or a helpline.
                     </p>
@@ -143,15 +191,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="card">
                         <h3 class="text-lg font-semibold mb-2" data-translate="chatsCompleted">Chats Completed</h3>
-                        <p class="text-3xl font-bold text-[#87CEEB]">5 <span class="text-sm font-normal text-gray-500">(mock)</span></p>
+                        <p class="text-3xl font-bold text-[#42B2FC]">5 <span class="text-sm font-normal text-gray-500">(mock)</span></p>
                     </div>
                     <div class="card">
                         <h3 class="text-lg font-semibold mb-2" data-translate="feedbackScore">Average Feedback</h3>
-                        <p class="text-3xl font-bold text-[#87CEEB]">4.5/5 <span class="text-sm font-normal text-gray-500">(mock)</span></p>
+                        <p class="text-3xl font-bold text-[#42B2FC]">4.5/5 <span class="text-sm font-normal text-gray-500">(mock)</span></p>
                     </div>
                     <div class="card">
                         <h3 class="text-lg font-semibold mb-2" data-translate="regularityPoints">Regularity Points</h3>
-                        <p class="text-3xl font-bold text-[#87CEEB]">120 <span class="text-sm font-normal text-gray-500">(mock)</span></p>
+                        <p class="text-3xl font-bold text-[#42B2FC]">120 <span class="text-sm font-normal text-gray-500">(mock)</span></p>
                     </div>
                     <div class="card">
                         <h3 class="text-lg font-semibold mb-2" data-translate="badgesEarned">Badges Earned</h3>
@@ -165,7 +213,7 @@
                 <div class="card mt-6">
                     <h3 class="text-lg font-semibold mb-2">Progress Bar <span class="text-sm font-normal text-gray-500">(mock)</span></h3>
                     <div class="w-full bg-gray-200 rounded-full h-4">
-                        <div class="bg-[#A0D2DB] h-4 rounded-full" style="width: 60%;"></div>
+                        <div class="bg-[#42B2FC] h-4 rounded-full" style="width: 60%;"></div>
                     </div>
                     <p class="text-sm text-gray-500 mt-1 text-center">60% to next level</p>
                 </div>
@@ -173,7 +221,11 @@
         </main>
 
         <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-t-lg">
-                        <nav class="container mx-auto flex justify-around p-1">                <button data-section="progress" class="tab-button flex-1 p-3 text-center text-sm rounded-md" data-translate="navProgress">Progress</button>                <button data-section="myAIMentor" class="tab-button flex-1 p-3 text-center text-sm rounded-md" data-translate="navMentor">My AI-Mentor</button>                <button data-section="myAccount" class="tab-button flex-1 p-3 text-center text-sm rounded-md" data-translate="navAccount">My Account</button>            </nav>
+            <nav class="container mx-auto flex justify-around p-1">
+                <button data-section="myAIMentor" class="tab-button flex-1 p-3 text-center text-sm rounded-md" data-translate="navMentor">My AI-Mentor</button>
+                <button data-section="myAccount" class="tab-button flex-1 p-3 text-center text-sm rounded-md" data-translate="navAccount">My Account</button>
+                <button data-section="progress" class="tab-button flex-1 p-3 text-center text-sm rounded-md" data-translate="navProgress">Progress</button>
+            </nav>
         </footer>
     </div>
 
@@ -181,7 +233,9 @@
         // Initialize Telegram Web App
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand(); // Expand the Web App to full height
+            window.Telegram.WebApp.expand();
+            // Set background color for the WebApp view itself if supported
+            // window.Telegram.WebApp.setBackgroundColor('#FAF0E6'); // This might override body bg
         }
 
         const translations = {
@@ -190,15 +244,36 @@
                 navProgress: "Progress",
                 navMentor: "My AI-Mentor",
                 navAccount: "My Account",
-                myAccountTitle: "What's on your mind?",
-                myAccountDescription: "Select the topics that concern you. This will help us personalize your AI mentor.",
-                topicAnxiety: "Anxiety",
-                topicSelfEsteem: "Self-esteem",
-                topicBurnout: "Burnout",
-                topicRelationships: "Relationships",
+                myAccountTitle: "My Account",
+                topicsToDiscussTitle: "The topics I want to discuss",
+                subCategoryStateOfMind: "My state of mind",
                 topicStress: "Stress",
+                topicUnstableSelfEsteem: "Unstable self-esteem",
+                topicIrritability: "Irritability",
+                topicConcentrationProblems: "Concentration problems",
+                topicEmotionalDependency: "Emotional dependency",
+                subCategoryRelationship: "Relationship",
+                topicWithPartner: "With partner",
+                topicInGeneralWithOthers: "In general, with others",
+                topicWithParents: "With parents",
+                subCategoryWorkStudy: "Work, study",
+                topicLackOfMotivation: "Lack of motivation",
+                topicBurnOut: "Burn-out",
+                topicDontKnowWhatToDo: "«I don't know what I want to do»",
                 topicProcrastination: "Procrastination",
-                saveButton: "Save Concerns",
+                topicLackOfPurpose: "Lack of purpose",
+                topicChangeLossOfJob: "Change, loss of job",
+                whereFromTitle: "Where are you from?",
+                chooseRegionPlaceholder: "Choose a region",
+                regionLatinAmerica: "Latin America",
+                regionNorthAmerica: "North America",
+                regionEurope: "Europe",
+                regionScandinavia: "Scandinavia",
+                regionMiddleEast: "Middle East",
+                regionIndia: "India",
+                saveButton: "Save",
+                saveButtonFeedback: "Your preferences have been saved.", // For popup
+                saveButtonFeedbackTitle: "Saved", // For popup title
                 aiMentorTitle: "Choose Your AI-Mentor",
                 startChatButton: "Start Chat in Telegram",
                 nextMentorButton: "Next",
@@ -231,15 +306,36 @@
                 navProgress: "Прогресс",
                 navMentor: "Мой ИИ-Наставник",
                 navAccount: "Мой Аккаунт",
-                myAccountTitle: "Что вас беспокоит?",
-                myAccountDescription: "Выберите темы, которые вас волнуют. Это поможет нам персонализировать вашего ИИ-наставника.",
-                topicAnxiety: "Тревожность",
-                topicSelfEsteem: "Самооценка",
-                topicBurnout: "Выгорание",
-                topicRelationships: "Отношения",
+                myAccountTitle: "Мой Аккаунт",
+                topicsToDiscussTitle: "Темы, которые я хочу обсудить",
+                subCategoryStateOfMind: "Моё состояние",
                 topicStress: "Стресс",
+                topicUnstableSelfEsteem: "Нестабильная самооценка",
+                topicIrritability: "Раздражительность",
+                topicConcentrationProblems: "Проблемы с концентрацией",
+                topicEmotionalDependency: "Эмоциональная зависимость",
+                subCategoryRelationship: "Отношения",
+                topicWithPartner: "С партнером",
+                topicInGeneralWithOthers: "В целом с другими",
+                topicWithParents: "С родителями",
+                subCategoryWorkStudy: "Работа, учеба",
+                topicLackOfMotivation: "Отсутствие мотивации",
+                topicBurnOut: "Выгорание",
+                topicDontKnowWhatToDo: "«Не знаю, чем хочу заниматься»",
                 topicProcrastination: "Прокрастинация",
-                saveButton: "Сохранить темы",
+                topicLackOfPurpose: "Отсутствие цели",
+                topicChangeLossOfJob: "Смена, потеря работы",
+                whereFromTitle: "Откуда вы?",
+                chooseRegionPlaceholder: "Выберите регион",
+                regionLatinAmerica: "Латинская Америка",
+                regionNorthAmerica: "Северная Америка",
+                regionEurope: "Европа",
+                regionScandinavia: "Скандинавия",
+                regionMiddleEast: "Ближний Восток",
+                regionIndia: "Индия",
+                saveButton: "Сохранить",
+                saveButtonFeedback: "Ваши данные сохранены.",
+                saveButtonFeedbackTitle: "Сохранено",
                 aiMentorTitle: "Выберите ИИ-Наставника",
                 startChatButton: "Начать чат в Telegram",
                 nextMentorButton: "Следующий",
@@ -272,15 +368,36 @@
                 navProgress: "Progrès",
                 navMentor: "Mon IA-Mentor",
                 navAccount: "Mon Compte",
-                myAccountTitle: "Qu'est-ce qui vous préoccupe ?",
-                myAccountDescription: "Sélectionnez les sujets qui vous préoccupent. Cela nous aidera à personnaliser votre mentor IA.",
-                topicAnxiety: "Anxiété",
-                topicSelfEsteem: "Estime de soi",
-                topicBurnout: "Épuisement professionnel",
-                topicRelationships: "Relations",
+                myAccountTitle: "Mon Compte",
+                topicsToDiscussTitle: "Les sujets que je veux aborder",
+                subCategoryStateOfMind: "Mon état d'esprit",
                 topicStress: "Stress",
+                topicUnstableSelfEsteem: "Estime de soi instable",
+                topicIrritability: "Irritabilité",
+                topicConcentrationProblems: "Problèmes de concentration",
+                topicEmotionalDependency: "Dépendance émotionnelle",
+                subCategoryRelationship: "Relation",
+                topicWithPartner: "Avec partenaire",
+                topicInGeneralWithOthers: "En général, avec les autres",
+                topicWithParents: "Avec les parents",
+                subCategoryWorkStudy: "Travail, études",
+                topicLackOfMotivation: "Manque de motivation",
+                topicBurnOut: "Épuisement professionnel",
+                topicDontKnowWhatToDo: "«Je ne sais pas ce que je veux faire»",
                 topicProcrastination: "Procrastination",
-                saveButton: "Enregistrer les préoccupations",
+                topicLackOfPurpose: "Manque de but",
+                topicChangeLossOfJob: "Changement, perte d'emploi",
+                whereFromTitle: "D'où venez-vous ?",
+                chooseRegionPlaceholder: "Choisissez une région",
+                regionLatinAmerica: "Amérique Latine",
+                regionNorthAmerica: "Amérique du Nord",
+                regionEurope: "Europe",
+                regionScandinavia: "Scandinavie",
+                regionMiddleEast: "Moyen-Orient",
+                regionIndia: "Inde",
+                saveButton: "Enregistrer",
+                saveButtonFeedback: "Vos préférences ont été enregistrées.",
+                saveButtonFeedbackTitle: "Enregistré",
                 aiMentorTitle: "Choisissez Votre IA-Mentor",
                 startChatButton: "Démarrer le chat dans Telegram",
                 nextMentorButton: "Suivant",
@@ -313,15 +430,36 @@
                 navProgress: "Progreso",
                 navMentor: "Mi IA-Mentor",
                 navAccount: "Mi Cuenta",
-                myAccountTitle: "¿Qué te preocupa?",
-                myAccountDescription: "Selecciona los temas que te preocupan. Esto nos ayudará a personalizar tu mentor de IA.",
-                topicAnxiety: "Ansiedad",
-                topicSelfEsteem: "Autoestima",
-                topicBurnout: "Agotamiento",
-                topicRelationships: "Relaciones",
+                myAccountTitle: "Mi Cuenta",
+                topicsToDiscussTitle: "Los temas que quiero discutir",
+                subCategoryStateOfMind: "Mi estado de ánimo",
                 topicStress: "Estrés",
+                topicUnstableSelfEsteem: "Autoestima inestable",
+                topicIrritability: "Irritabilidad",
+                topicConcentrationProblems: "Problemas de concentración",
+                topicEmotionalDependency: "Dependencia emocional",
+                subCategoryRelationship: "Relación",
+                topicWithPartner: "Con pareja",
+                topicInGeneralWithOthers: "En general, con otros",
+                topicWithParents: "Con los padres",
+                subCategoryWorkStudy: "Trabajo, estudio",
+                topicLackOfMotivation: "Falta de motivación",
+                topicBurnOut: "Agotamiento",
+                topicDontKnowWhatToDo: "«No sé qué quiero hacer»",
                 topicProcrastination: "Procrastinación",
-                saveButton: "Guardar preocupaciones",
+                topicLackOfPurpose: "Falta de propósito",
+                topicChangeLossOfJob: "Cambio, pérdida de empleo",
+                whereFromTitle: "¿De dónde eres?",
+                chooseRegionPlaceholder: "Elige una región",
+                regionLatinAmerica: "América Latina",
+                regionNorthAmerica: "América del Norte",
+                regionEurope: "Europa",
+                regionScandinavia: "Escandinavia",
+                regionMiddleEast: "Medio Oriente",
+                regionIndia: "India",
+                saveButton: "Guardar",
+                saveButtonFeedback: "Tus preferencias han sido guardadas.",
+                saveButtonFeedbackTitle: "Guardado",
                 aiMentorTitle: "Elige Tu IA-Mentor",
                 startChatButton: "Iniciar chat en Telegram",
                 nextMentorButton: "Siguiente",
@@ -354,15 +492,39 @@
         let currentLanguage = 'en';
         let currentMentorIndex = 0;
         let userConcerns = [];
+        let userRegion = '';
 
-        const concerns = [
-            { id: 'anxiety', key: 'topicAnxiety' },
-            { id: 'selfEsteem', key: 'topicSelfEsteem' },
-            { id: 'burnout', key: 'topicBurnout' },
-            { id: 'relationships', key: 'topicRelationships' },
-            { id: 'stress', key: 'topicStress' },
-            { id: 'procrastination', key: 'topicProcrastination' },
-        ];
+        const concernCategories = {
+            stateOfMind: {
+                elementId: 'concernsStateOfMind',
+                items: [
+                    { id: 'stress', key: 'topicStress' },
+                    { id: 'unstableSelfEsteem', key: 'topicUnstableSelfEsteem' },
+                    { id: 'irritability', key: 'topicIrritability' },
+                    { id: 'concentrationProblems', key: 'topicConcentrationProblems' },
+                    { id: 'emotionalDependency', key: 'topicEmotionalDependency' },
+                ]
+            },
+            relationship: {
+                elementId: 'concernsRelationship',
+                items: [
+                    { id: 'withPartner', key: 'topicWithPartner' },
+                    { id: 'inGeneralWithOthers', key: 'topicInGeneralWithOthers' },
+                    { id: 'withParents', key: 'topicWithParents' },
+                ]
+            },
+            workStudy: {
+                elementId: 'concernsWorkStudy',
+                items: [
+                    { id: 'lackOfMotivation', key: 'topicLackOfMotivation' },
+                    { id: 'burnOut', key: 'topicBurnOut' },
+                    { id: 'dontKnowWhatToDo', key: 'topicDontKnowWhatToDo' },
+                    { id: 'procrastination', key: 'topicProcrastination' },
+                    { id: 'lackOfPurpose', key: 'topicLackOfPurpose' },
+                    { id: 'changeLossOfJob', key: 'topicChangeLossOfJob' },
+                ]
+            }
+        };
 
         const aiPersonalities = [
           {
@@ -372,7 +534,7 @@
             languages: ['English', 'Hindi'],
             approachKey: 'approachCBT',
             descriptionKey: 'anyaDescription',
-            telegramUsername: 'AnyaSharmaAIBot_bot', // Example username
+            telegramUsername: 'AnyaSharmaAIBot_bot',
             avatar: 'https://placehold.co/120x120/A0D2DB/333333?text=AS'
           },
           {
@@ -407,16 +569,23 @@
           }
         ];
 
-        // --- Localization ---
         function translateUI() {
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
-                if (translations[currentLanguage] && translations[currentLanguage][key]) {
-                    el.innerHTML = translations[currentLanguage][key];
+                const translation = translations[currentLanguage]?.[key];
+                if (translation) {
+                    // Preserve child elements if the element is a container for options (like select)
+                    if (el.tagName === 'SELECT' && el.options.length > 0 && key === 'chooseRegionPlaceholder') {
+                         // Only translate the placeholder option if it's the first one and has an empty value
+                        if (el.options[0].value === "") {
+                            el.options[0].textContent = translation;
+                        }
+                    } else {
+                         el.innerHTML = translation;
+                    }
                 }
             });
-            // Update dynamic content if needed (e.g., AI mentor card, concerns)
-            renderConcernsList();
+            renderMyAccountTopics();
             renderAIMentorCard();
         }
 
@@ -426,7 +595,6 @@
             translateUI();
         });
 
-        // --- Navigation ---
         const sections = ['myAccount', 'myAIMentor', 'progress'];
         const navButtons = document.querySelectorAll('.tab-button');
 
@@ -435,7 +603,6 @@
                 document.getElementById(id).classList.add('hidden');
             });
             document.getElementById(sectionId).classList.remove('hidden');
-
             navButtons.forEach(button => {
                 button.classList.toggle('active', button.dataset.section === sectionId);
             });
@@ -448,26 +615,35 @@
             });
         });
 
-        // --- My Account Section ---
-        const concernsListEl = document.getElementById('concernsList');
         const saveConcernsButton = document.getElementById('saveConcerns');
+        const userRegionSelect = document.getElementById('userRegionSelect');
 
-        function renderConcernsList() {
-            concernsListEl.innerHTML = ''; // Clear previous items
-            concerns.forEach(concern => {
-                const button = document.createElement('button');
-                button.classList.add('concern-tag', 'w-full', 'text-left', 'p-3', 'border', 'border-gray-300', 'rounded-md', 'hover:bg-gray-100');
-                button.textContent = translations[currentLanguage][concern.key] || concern.key;
-                button.dataset.concernId = concern.id;
-                if (userConcerns.includes(concern.id)) {
-                    button.classList.add('selected');
-                }
-                button.addEventListener('click', () => {
-                    toggleConcern(concern.id);
-                    button.classList.toggle('selected');
+        function renderMyAccountTopics() {
+            for (const categoryKey in concernCategories) {
+                const category = concernCategories[categoryKey];
+                const container = document.getElementById(category.elementId);
+                if (!container) continue;
+                container.innerHTML = '';
+                category.items.forEach(concern => {
+                    const button = document.createElement('button');
+                    button.classList.add('concern-tag');
+                    button.textContent = translations[currentLanguage]?.[concern.key] || concern.key.replace(/([A-Z])/g, ' $1').trim();
+                    button.dataset.concernId = concern.id;
+                    if (userConcerns.includes(concern.id)) {
+                        button.classList.add('selected');
+                    }
+                    button.addEventListener('click', () => {
+                        toggleConcern(concern.id);
+                        button.classList.toggle('selected');
+                    });
+                    container.appendChild(button);
                 });
-                concernsListEl.appendChild(button);
-            });
+            }
+             // Ensure the placeholder for the region select is also translated
+            const placeholderOption = userRegionSelect.querySelector('option[value=""]');
+            if (placeholderOption) {
+                placeholderOption.textContent = translations[currentLanguage]?.chooseRegionPlaceholder || "Choose a region";
+            }
         }
 
         function toggleConcern(concernId) {
@@ -480,67 +656,80 @@
         }
 
         saveConcernsButton.addEventListener('click', () => {
+            userRegion = userRegionSelect.value; // Get value from select
             localStorage.setItem('frommAiUserConcerns', JSON.stringify(userConcerns));
-            // Optionally, provide feedback to the user
-            alert((translations[currentLanguage] && translations[currentLanguage].saveButton ? 'Concerns saved!' : 'Темы сохранены!'));
-            // For Telegram WebApp, use a custom modal or a subtle notification instead of alert if possible
-             if (window.Telegram && window.Telegram.WebApp) {
+            localStorage.setItem('frommAiUserRegion', userRegion);
+
+            const savedMessage = translations[currentLanguage]?.saveButtonFeedback || 'Data saved!';
+            const savedTitle = translations[currentLanguage]?.saveButtonFeedbackTitle || 'Saved';
+
+            if (window.Telegram && window.Telegram.WebApp) {
                 window.Telegram.WebApp.showPopup({
-                    title: currentLanguage === 'ru' ? 'Сохранено' : 'Saved',
-                    message: currentLanguage === 'ru' ? 'Ваши темы были сохранены.' : 'Your concerns have been saved.',
+                    title: savedTitle,
+                    message: savedMessage,
                     buttons: [{type: 'ok'}]
                 });
+            } else {
+                alert(savedMessage);
             }
         });
 
-        // --- My AI-Mentor Section ---
         const mentorCardContainer = document.getElementById('aiMentorCardContainer');
         const prevMentorButton = document.getElementById('prevMentor');
         const nextMentorButton = document.getElementById('nextMentor');
 
         function renderAIMentorCard() {
+            if (!aiPersonalities || aiPersonalities.length === 0) {
+                mentorCardContainer.innerHTML = `<p class="text-center text-gray-500">No mentors available at the moment.</p>`;
+                return;
+            }
             const mentor = aiPersonalities[currentMentorIndex];
             if (!mentor) return;
 
-            const lang = currentLanguage; // short alias
+            const lang = currentLanguage;
+            const description = translations[lang]?.[mentor.descriptionKey] || mentor.descriptionKey || 'Description not available.';
+
 
             mentorCardContainer.innerHTML = `
                 <div class="card text-center p-6 transform transition-all duration-300 ease-in-out hover:scale-105">
-                    <img src="${mentor.avatar}" alt="${mentor.name}" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-[#A0D2DB]">
+                    <img src="${mentor.avatar}" alt="${mentor.name}" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-[#42B2FC]" onerror="this.src='https://placehold.co/120x120/E0E0E0/333333?text=Mentor'; this.onerror=null;">
                     <h3 class="text-2xl font-bold mb-1">${mentor.name}</h3>
                     <p class="text-sm text-gray-500 mb-3">
-                        <strong data-translate="originLabel">${translations[lang].originLabel || 'Origin'}:</strong>
-                        <span data-translate="${mentor.originKey}">${translations[lang][mentor.originKey] || mentor.originKey}</span>
+                        <strong>${translations[lang]?.originLabel || 'Origin'}:</strong>
+                        <span>${translations[lang]?.[mentor.originKey] || mentor.originKey}</span>
                     </p>
                     <div class="mb-3">
-                        <strong class="block text-sm font-medium mb-1" data-translate="languagesLabel">${translations[lang].languagesLabel || 'Languages'}:</strong>
+                        <strong class="block text-sm font-medium mb-1">${translations[lang]?.languagesLabel || 'Languages'}:</strong>
                         <div class="flex flex-wrap justify-center gap-2">
                             ${mentor.languages.map(l => `<span class="bg-gray-200 text-gray-700 px-2 py-1 text-xs rounded-full">${l}</span>`).join('')}
                         </div>
                     </div>
                     <div class="mb-4">
-                        <strong class="block text-sm font-medium mb-1" data-translate="approachLabel">${translations[lang].approachLabel || 'Therapeutic Approach'}:</strong>
-                        <p class="text-sm text-[#87CEEB] font-semibold" data-translate="${mentor.approachKey}">${translations[lang][mentor.approachKey] || mentor.approachKey}</p>
+                        <strong class="block text-sm font-medium mb-1">${translations[lang]?.approachLabel || 'Therapeutic Approach'}:</strong>
+                        <p class="text-sm text-[#42B2FC] font-semibold">${translations[lang]?.[mentor.approachKey] || mentor.approachKey}</p>
                     </div>
-                    <p class="text-sm text-gray-600 mb-6 min-h-[40px]" data-translate="${mentor.descriptionKey}">
-                        ${translations[lang][mentor.descriptionKey] || mentor.descriptionKey}
-                    </p>
-                    <button id="startChat" class="btn-primary w-full" data-translate="startChatButton">
-                        ${translations[lang].startChatButton || 'Start Chat in Telegram'}
-                    </button>
+                    <p class="text-sm text-gray-600 mb-6 min-h-[40px]">${description}</p>
+                    <button id="startChat" class="btn-primary w-full">${translations[lang]?.startChatButton || 'Start Chat in Telegram'}</button>
                 </div>
             `;
 
             document.getElementById('startChat').addEventListener('click', () => {
-                const concernsQueryParam = userConcerns.length > 0 ? `concerns_${userConcerns.join('_')}` : '';
-                const telegramLink = `https://t.me/${mentor.telegramUsername}?start=${concernsQueryParam}`;
+                let startParams = [];
+                if (userConcerns.length > 0) {
+                    startParams.push(`concerns_${userConcerns.join('_')}`);
+                }
+                if (userRegion) {
+                    startParams.push(`region_${encodeURIComponent(userRegion)}`);
+                }
+                const telegramLink = `https://t.me/${mentor.telegramUsername}?start=${startParams.join('&')}`;
+
                 if (window.Telegram && window.Telegram.WebApp) {
                     window.Telegram.WebApp.openTelegramLink(telegramLink);
                 } else {
-                    // Fallback for browsers or if SDK not available
                     window.open(telegramLink, '_blank');
                     console.log('Opening Telegram link:', telegramLink);
                 }
+                demoFetchToAPI(mentor);
             });
         }
 
@@ -554,84 +743,57 @@
             renderAIMentorCard();
         });
 
-        // --- Demo Fetch (as requested) ---
         async function demoFetchToAPI(mentor) {
-            // This is a mock API call for demonstration
             const mockApiEndpoint = 'https://jsonplaceholder.typicode.com/posts';
-            const telegramUser = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user)
+            const telegramUser = (window.Telegram?.WebApp?.initDataUnsafe?.user)
                                  ? window.Telegram.WebApp.initDataUnsafe.user
                                  : { id: 'testUser123', first_name: 'Demo' };
-
             console.log("Preparing to send demo API request for mentor:", mentor.name, "and user:", telegramUser.id);
             console.log("User concerns for prompt:", userConcerns);
-
+            console.log("User region for prompt:", userRegion);
             try {
                 const response = await fetch(mockApiEndpoint, {
                     method: 'POST',
                     body: JSON.stringify({
                         title: `AI Mentor Request: ${mentor.name}`,
-                        body: `User ID: ${telegramUser.id}, User Name: ${telegramUser.first_name}, Selected Mentor: ${mentor.name}, Approach: ${translations[currentLanguage][mentor.approachKey]}, Concerns: ${userConcerns.join(', ')}`,
+                        body: `User ID: ${telegramUser.id}, User Name: ${telegramUser.first_name}, Selected Mentor: ${mentor.name}, Approach: ${translations[currentLanguage]?.[mentor.approachKey]}, Concerns: ${userConcerns.join(', ')}, Region: ${userRegion}`,
                         userId: telegramUser.id,
                     }),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
-                    },
+                    headers: { 'Content-type': 'application/json; charset=UTF-8' },
                 });
                 if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                 const data = await response.json();
                 console.log('Demo API Response:', data);
-                
-                if (window.Telegram && window.Telegram.WebApp) {
-                     window.Telegram.WebApp.showPopup({
-                        title: 'Demo API Call',
-                        message: `Successfully sent mock data for ${mentor.name}. Check console for details.`,
-                        buttons: [{type: 'ok'}]
-                    });
-                } else {
-                    alert(`Demo API call for ${mentor.name} successful. Check console for (mock) response.`);
-                }
-
             } catch (error) {
                 console.error('Demo API fetch error:', error);
-                 if (window.Telegram && window.Telegram.WebApp) {
-                     window.Telegram.WebApp.showPopup({
-                        title: 'Demo API Error',
-                        message: `Failed to send mock data: ${error.message}. Check console.`,
-                        buttons: [{type: 'ok'}]
-                    });
-                } else {
-                    alert('Demo API call failed. Check console.');
-                }
             }
         }
-        // Example of how you might call it (e.g., after a mentor is chosen, for logging or analytics)
-        // setTimeout(() => demoFetchToAPI(aiPersonalities[0]), 5000); // Call for first mentor after 5s for demo
 
-        // --- Initial Load ---
         function initializeApp() {
-            // Load language
             const savedLang = localStorage.getItem('frommAiLang');
             if (savedLang && translations[savedLang]) {
                 currentLanguage = savedLang;
                 document.getElementById('languageSwitcher').value = savedLang;
             }
 
-            // Load user concerns
             const savedConcerns = localStorage.getItem('frommAiUserConcerns');
             if (savedConcerns) {
-                userConcerns = JSON.parse(savedConcerns);
+                try { userConcerns = JSON.parse(savedConcerns); }
+                catch (e) { console.error("Error parsing saved concerns:", e); userConcerns = []; }
             }
 
-            // Load active section
-            const savedSection = localStorage.getItem('frommAiActiveSection') || 'myAIMentor';
-            showSection(savedSection);
+            const savedRegion = localStorage.getItem('frommAiUserRegion');
+            if (savedRegion) {
+                userRegion = savedRegion;
+                userRegionSelect.value = userRegion; // Set select value
+            }
 
-            translateUI(); // This will also render concerns and mentor card
+            const savedSection = localStorage.getItem('frommAiActiveSection') || 'myAIMentor';
+            translateUI();
+            showSection(savedSection);
         }
 
-        // Wait for the DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', initializeApp);
-
     </script>
 </body>
 </html>
